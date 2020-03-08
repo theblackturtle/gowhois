@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/domainr/whois"
-	whoisparser "github.com/likexian/whois-parser-go"
 	"os"
 	"strings"
+
+	"github.com/domainr/whois"
+	whoisparser "github.com/likexian/whois-parser-go"
 )
 
 func main() {
