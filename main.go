@@ -20,28 +20,28 @@ func main() {
 		}
 		request, err := whois.NewRequest(line)
 		if err != nil {
-			printError(err)
+			printError("Request error: " + err.Error())
 			continue
 		}
 		response, err := whois.DefaultClient.Fetch(request)
 		if err != nil {
-			printError(err)
+			printError("Fetch error: " + err.Error())
 			continue
 		}
 		result, err := whoisparser.Parse(response.String())
 		if err != nil {
-			printError(err)
+			printError("Parse error: " + err.Error())
 			continue
 		}
 		j, err := json.Marshal(result)
 		if err != nil {
-			printError(err)
+			printError("Marshal error: " + err.Error())
 			continue
 		}
 		fmt.Println(string(j))
 	}
 }
 
-func printError(e error) {
-	fmt.Fprintf(os.Stderr, e.Error()+"\n")
+func printError(s string) {
+	fmt.Fprintf(os.Stderr, s+"\n")
 }
