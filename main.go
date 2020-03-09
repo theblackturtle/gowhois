@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
+	"os/exec"
 	"strings"
 
-	"github.com/domainr/whois"
 	whoisparser "github.com/likexian/whois-parser-go"
 )
 
@@ -18,17 +19,22 @@ func main() {
 		if line == "" {
 			continue
 		}
-		request, err := whois.NewRequest(line)
+
+		var domain string
+		domain = line
+		if strings.HasPrefix(line, "http") {
+			u, err := url.Parse(line)
+			if err != nil {
+				domain = u.Hostname()
+			}
+		}
+
+		out, err := exec.Command("whois", domain).Output()
 		if err != nil {
-			printError("Request error: " + err.Error())
+			printError("Whois error: " + err.Error())
 			continue
 		}
-		response, err := whois.DefaultClient.Fetch(request)
-		if err != nil {
-			printError("Fetch error: " + err.Error())
-			continue
-		}
-		result, err := whoisparser.Parse(response.String())
+		result, err := whoisparser.Parse(string(out))
 		if err != nil {
 			printError("Parse error: " + err.Error())
 			continue
